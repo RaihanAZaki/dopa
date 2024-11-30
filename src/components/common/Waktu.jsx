@@ -1,39 +1,31 @@
 import React, { useState, useEffect } from "react";
 
-const TimeElapsed = () => {
+const Waktu = () => {
   const [timeElapsed, setTimeElapsed] = useState(0);
 
+  const SERVER_START_TIME = 1698787200000;
+
   useEffect(() => {
-    // Periksa apakah waktu mulai sudah ada di localStorage
     let startTime = localStorage.getItem("startTime");
 
     if (!startTime) {
-      // Jika tidak ada, simpan waktu mulai baru
-      startTime = Date.now();
+      startTime = SERVER_START_TIME;
       localStorage.setItem("startTime", startTime);
     }
 
-    const calculateElapsedTime = () => {
-      const now = Date.now(); // Waktu saat ini
-      const elapsed = Math.floor((now - startTime) / 1000); // Selisih dalam detik
-      setTimeElapsed(elapsed); // Perbarui state
-    };
+    const interval = setInterval(() => {
+      const now = Date.now(); 
+      const elapsed = Math.floor((now - startTime) / 1000); 
+      setTimeElapsed(elapsed); 
+    }, 1000);
 
-    // Hitung waktu setiap detik
-    const interval = setInterval(calculateElapsedTime, 1000);
-
-    // Hitung waktu segera saat komponen dimuat (agar tidak menunggu 1 detik pertama)
-    calculateElapsedTime();
-
-    // Bersihkan interval saat komponen di-unmount
     return () => clearInterval(interval);
   }, []);
 
-  // Konversi detik menjadi hari, jam, menit, dan detik
-  const days = Math.floor(timeElapsed / 86400); // 1 hari = 86400 detik
-  const hours = Math.floor((timeElapsed % 86400) / 3600); // Sisa detik setelah hari
-  const minutes = Math.floor((timeElapsed % 3600) / 60); // Sisa detik setelah jam
-  const seconds = timeElapsed % 60; // Sisa detik setelah menit
+  const days = Math.floor(timeElapsed / 86400);
+  const hours = Math.floor((timeElapsed % 86400) / 3600); 
+  const minutes = Math.floor((timeElapsed % 3600) / 60); 
+  const seconds = timeElapsed % 60; 
 
   return (
     <div>
@@ -42,4 +34,4 @@ const TimeElapsed = () => {
   );
 };
 
-export default TimeElapsed;
+export default Waktu;
